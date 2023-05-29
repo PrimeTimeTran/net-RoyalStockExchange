@@ -47,12 +47,21 @@ if (app.Environment.IsDevelopment())
 else
     app.MapControllers();
 
+app.UseSwagger();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+builder.Services.ConfigureSwaggerGen(setup =>
+{
+    setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Royal Stock Exchange",
+        Version = "v1"
+    });
+});
 
 app.UseHttpsRedirection();
 
