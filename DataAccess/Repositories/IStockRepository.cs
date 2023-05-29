@@ -6,7 +6,7 @@ public interface IStockRepository
 {
     Stock GetById(int id);
     IEnumerable<Stock> GetAll();
-    StockDTO Add(StockDTO stock);
-    StockDTO Update(int id, StockDTO stock);
+    Stock Add(StockDTO stock);
+    Stock Update(int id, StockDTO stock);
     void Delete(int id);
 }

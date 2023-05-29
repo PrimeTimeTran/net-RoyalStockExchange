@@ -11,19 +11,14 @@ public class StockRepository : IStockRepository
 
     public StockRepository(RseContext context, IMapper mapper)
     {
-        _context = context;
         _mapper = mapper;
+        _context = context;
     }
 
     public IEnumerable<Stock> GetAll()
     {
         var stocks = _context.Stocks;
         
-        foreach (var stock in stocks)
-        {
-            Console.WriteLine($"Stock Id: {stock.Id}, Name: {stock.Name}, Price: {stock.Price}, Quantity: {stock.Quantity}");
-        }
-
         return stocks;
     }
 
@@ -32,47 +27,48 @@ public class StockRepository : IStockRepository
         return _context.Stocks.FirstOrDefault(s => s.Id == id);
     }
 
-    public StockDTO Add(StockDTO s)
+    public Stock Add(StockDTO s)
     {
         Stock stock = _mapper.Map<Stock>(s);
         Stock addedStock = _context.Stocks.Add(stock).Entity;
         _context.SaveChanges();
-        return _mapper.Map<StockDTO>(addedStock);
+        return addedStock;
     }
-
-    public StockDTO Update(int id, StockDTO s)
+    
+    public Stock Update(int id, StockDTO s)
     {
-        Stock stockToUpdate = _context.Stocks.Find(id);
-        if (stockToUpdate == null)
+        Stock stock = _context.Stocks.Find(id);
+        if (stock == null)
         {
-            // Stock not found, handle the error accordingly
-            // For example, throw an exception or return an error response
-            // ...
         }
 
-        stockToUpdate.Name = s.Name;
-        stockToUpdate.Price = s.Price;
-        stockToUpdate.Quantity = s.Quantity;
+        var stockProps = typeof(Stock).GetProperties();
+        var dtoProps = typeof(StockDTO).GetProperties();
+
+        foreach (var prop in dtoProps)
+        {
+            if (prop.Name == "Id")
+                continue;
+
+            var stockProp = stockProps.FirstOrDefault(p => p.Name == prop.Name);
+            if (stockProp != null && prop.GetValue(s) != null)
+            {
+                stockProp.SetValue(stock, prop.GetValue(s));
+            }
+        }
 
         _context.SaveChanges();
 
-        StockDTO updatedStockDTO = _mapper.Map<StockDTO>(stockToUpdate);
-
-        return updatedStockDTO;
+        return stock;
     }
 
     public void Delete(int id)
     {
-        Stock stockToDelete = _context.Stocks.Find(id);
-        if (stockToDelete == null)
+        Stock s = _context.Stocks.Find(id);
+        if (s == null)
         {
-            // Stock not found, handle the error accordingly
-            // For example, throw an exception or return an error response
-            // ...
         }
-
-        _context.Stocks.Remove(stockToDelete);
+        _context.Stocks.Remove(s);
         _context.SaveChanges();
     }
-
 }

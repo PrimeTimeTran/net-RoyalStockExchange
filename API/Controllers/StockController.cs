@@ -1,8 +1,7 @@
-using Common.Models;
-using DataAccess.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
+using Microsoft.AspNetCore.Authorization;
+
+using Common.Models;
 using Services.Interfaces;
 
 namespace API.Controllers;
@@ -23,25 +22,25 @@ public class StockController : ControllerBase
     }
 
     [HttpGet]
-    public IEnumerable<StockDTO> Get()
+    public IActionResult GetAll()
     {
         try
         {
             var stocks = _stockService.GetAll();
-            return stocks;
+            return Ok(stocks);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, "An error occurred while creating the stock.");
+            return StatusCode(500, "An error occured fetching stocks.");
         }
     }
     
     [HttpGet("{id}")]
-    public StockDTO GetById(int id)
+    public IActionResult GetById(int id)
     {
         try
         {
-            return _stockService.GetStockById(id);;
+            return Ok(_stockService.GetStockById(id));
         }
         catch (KeyNotFoundException)
         {
@@ -50,12 +49,12 @@ public class StockController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult Create([FromBody] StockDTO s)
+    public IActionResult Create([FromBody] StockDTO dto)
     {
         try
         {
-            StockDTO createdStock = _stockService.Add(s);
-            return CreatedAtAction(nameof(GetById), new { id = createdStock.Id }, createdStock);
+            StockDTO s = _stockService.Add(dto);
+            return CreatedAtAction(nameof(GetById), new { id = s.Id }, s);
         }
         catch (Exception ex)
         {
@@ -64,11 +63,11 @@ public class StockController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] StockDTO stockDto)
+    public IActionResult Update(int id, [FromBody] StockDTO dto)
     {
         try
         {
-            StockDTO s = _stockService.Update(id, stockDto);
+            StockDTO s = _stockService.Update(id, dto);
             return Ok(s);
         }
         catch (KeyNotFoundException)

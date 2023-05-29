@@ -7,10 +7,6 @@
 - Rider/Visual Studio
 - Azure Data Studio
 
-## TODO
-
-- Create routes
-
 ## Database
 
 How to setup dev database(db).

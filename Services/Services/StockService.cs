@@ -13,14 +13,13 @@ public class StockService : IStockService
     
     public StockService(IUnitOfWork unitOfWork, IMapper mapper)
     {
-        _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
     
     public StockDTO GetStockById(int id)
     {
         var stock = _unitOfWork.StockRepository.GetById(id);
-
         return _mapper.Map<StockDTO>(stock);
     }
 
@@ -32,7 +31,9 @@ public class StockService : IStockService
 
     public StockDTO Update(int id, StockDTO s)
     {
-        return _unitOfWork.StockRepository.Update(id, s);
+        var stock = _unitOfWork.StockRepository.Update(id, s);
+        return _mapper.Map<StockDTO>(stock);
+
     }
 
     public void Delete(int id)
@@ -42,17 +43,8 @@ public class StockService : IStockService
 
     public IEnumerable<StockDTO> GetAll()
     {
-        try
-        {
-            var stocks = _unitOfWork.StockRepository.GetAll();
-            var stockDTOs = _mapper.Map<IEnumerable<StockDTO>>(stocks);
-            return stockDTOs;
-        }
-        catch (Exception ex)
-        {
-            // Log or handle the exception appropriately
-            // You can also throw a custom exception or return an error response
-            throw new Exception("An error occurred while retrieving stocks.", ex);
-        }
+        var stocks = _unitOfWork.StockRepository.GetAll();
+        var stockDTOs = _mapper.Map<IEnumerable<StockDTO>>(stocks);
+        return stockDTOs;
     }
 }
