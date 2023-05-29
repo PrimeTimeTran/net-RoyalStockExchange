@@ -23,7 +23,16 @@ builder.Services.AddDbContext<RseContext>(options => options.UseSqlServer(builde
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwaggerGen(setup =>
+{
+    setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Royal Stock Exchange",
+        Version = "v1"
+    });
+});
 
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -48,20 +57,12 @@ else
     app.MapControllers();
 
 app.UseSwagger();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
 }
-
-builder.Services.ConfigureSwaggerGen(setup =>
-{
-    setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    {
-        Title = "Royal Stock Exchange",
-        Version = "v1"
-    });
-});
 
 app.UseHttpsRedirection();
 
