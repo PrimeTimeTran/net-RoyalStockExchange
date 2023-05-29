@@ -16,6 +16,6 @@ public class StockDTO
         Id = id;
         Name = name;
         Quantity = quantity;
-        Price = Price;
+        Price = price;
     }
 }

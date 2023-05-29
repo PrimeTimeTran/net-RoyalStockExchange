@@ -1,3 +1,5 @@
+using AutoMapper;
+
 using DataAccess.Context;
 using DataAccess.Repositories;
 
@@ -5,11 +7,14 @@ namespace DataAccess.UnitOfWork;
 public class UnitOfWork : IUnitOfWork
     {
         private readonly RseContext _context;
+        private readonly IMapper _mapper;
         private IStockRepository _stockRepository;
 
-        public UnitOfWork(RseContext context)
+        public UnitOfWork(RseContext context, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
+            _stockRepository = new StockRepository(_context, _mapper);
         }
 
         public IStockRepository StockRepository
@@ -18,7 +23,7 @@ public class UnitOfWork : IUnitOfWork
             {
                 if (_stockRepository == null)
                 {
-                    _stockRepository = new StockRepository(_context);
+                    _stockRepository = new StockRepository(_context, _mapper);
                 }
                 return _stockRepository;
             }

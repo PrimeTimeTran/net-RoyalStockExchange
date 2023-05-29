@@ -3,9 +3,9 @@ using AutoMapper;
 using Common.Models;
 using DataAccess.UnitOfWork;
 using Services.Interfaces;
+using DataAccess.Entities;
 
 namespace Services.Services;
-
 public class StockService : IStockService
 {
     private readonly IMapper _mapper;
@@ -24,19 +24,20 @@ public class StockService : IStockService
         return _mapper.Map<StockDTO>(stock);
     }
 
-    public void CreateStock(StockDTO stockDto)
+    public StockDTO Add(StockDTO s)
     {
-        throw new NotImplementedException();
+        var stock = _unitOfWork.StockRepository.Add(s);
+        return _mapper.Map<StockDTO>(stock);
     }
 
-    public void UpdateStock(int id, StockDTO stockDto)
+    public StockDTO Update(int id, StockDTO s)
     {
-        throw new NotImplementedException();
+        return _unitOfWork.StockRepository.Update(id, s);
     }
 
-    public void DeleteStock(int id)
+    public void Delete(int id)
     {
-        throw new NotImplementedException();
+        _unitOfWork.StockRepository.Delete(id);
     }
 
     public IEnumerable<StockDTO> GetAll()

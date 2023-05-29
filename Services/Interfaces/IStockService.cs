@@ -1,14 +1,13 @@
 using Common.Models;
-using System.Collections.Generic;
+using DataAccess.Entities;
+
 
 namespace Services.Interfaces;
-
 public interface IStockService
 {
     StockDTO GetStockById(int id);
-    void CreateStock(StockDTO stockDto);
-    void UpdateStock(int id, StockDTO stockDto);
-    void DeleteStock(int id);
+    StockDTO Add(StockDTO stockDto);
+    StockDTO Update(int id, StockDTO stockDto);
+    void Delete(int id);
     IEnumerable<StockDTO> GetAll();
-    // Other service methods
 }

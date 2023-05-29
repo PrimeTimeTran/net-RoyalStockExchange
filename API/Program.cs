@@ -31,7 +31,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 var mapperConfig = new MapperConfiguration(config =>
 {
     config.CreateMap<Stock, StockDTO>();
-    // Add other mappings as needed
+    config.CreateMap<StockDTO, Stock>();
 });
 
 // Create an instance of IMapper using the configured mapper configuration
