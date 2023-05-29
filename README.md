@@ -54,3 +54,5 @@ Connection string for dev using DB GUI(Rider, Azure Data Studio, etc.)
 [SQL Server Commands](https://www.mssqltips.com/sqlservertip/7432/sql-cheat-sheet-sql-server-tsql-commands/)
 [Setup DB with Entity framework](https://www.youtube.com/watch?v=qkJ9keBmQWo&ab_channel=IAmTimCorey)
 [Query DB from controller](https://makingloops.com/refactoring-db-calls-out-of-controllers/)
+
+## Testing
