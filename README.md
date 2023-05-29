@@ -49,7 +49,7 @@ Connection string for dev using DB GUI(Rider, Azure Data Studio, etc.)
 
 > Server=localhost; Database=RSE; User Id=sa; Password=reallyStrongPwd123; TrustServerCertificate=true
 
-## References 
+## References
 
 [SQL Server Commands](https://www.mssqltips.com/sqlservertip/7432/sql-cheat-sheet-sql-server-tsql-commands/)
 [Setup DB with Entity framework](https://www.youtube.com/watch?v=qkJ9keBmQWo&ab_channel=IAmTimCorey)
