@@ -56,3 +56,12 @@ Connection string for dev using DB GUI(Rider, Azure Data Studio, etc.)
 [Query DB from controller](https://makingloops.com/refactoring-db-calls-out-of-controllers/)
 
 ## Testing
+
+(start) - (close) = (number of trading hours per day)
+9:30am-4:00pm = 6.5
+
+(hours per trading day) x (minutes per hours) = (minutes in trading day)
+6.5 x 60 = 390
+
+(minutes trading day) x (trading days per year) = (number of minute prices of stock per year)
+390 x 252 = 98280
