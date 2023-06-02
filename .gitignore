@@ -6,6 +6,7 @@ riderModule.iml
 .DS_Store
 .vs
 .fake
+.idea
 RSE.sln.DotSettings.user
 
 NOTES.md
