@@ -6,5 +6,7 @@ namespace DataAccess.UnitOfWork;
 public interface IUnitOfWork : IDisposable
 {
     IStockRepository StockRepository { get; }
+    IPriceRepository PriceRepository { get; }
+
     // void Save() {};
 }

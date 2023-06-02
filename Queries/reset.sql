@@ -1,37 +1,36 @@
--- Cleanse
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Stocks;
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS Prices;
 
--- Users
 CREATE TABLE Users (
     Id INT PRIMARY KEY IDENTITY(1, 1),
     FName VARCHAR(255) NOT NULL,
-    LName VARCHAR(255) NOT NULL
+    LName VARCHAR(255) NOT NULL,
 );
 
 INSERT INTO Users (FName, LName)
 VALUES 
     ('Loi', 'Tran'), 
-    ('Thao', 'Tran');
+    ('Tai', 'Tran'),
+    ('Thao', 'Tran'), 
+    ('Hieu', 'Tran'), 
+    ('Doug', 'Tran');
 
--- Orders
 CREATE TABLE Orders (
     Expires DATETIME,
-    Shares INT NOT NULL,
     UserId INT NOT NULL,
-    StopPrice DECIMAL(10, 2),
+    Shares INT NOT NULL,
     OrderableId INT NOT NULL,
+    StopPrice DECIMAL(10, 2),
     Type VARCHAR(20) NOT NULL,
     LimitPrice DECIMAL(10, 2),
     Status VARCHAR(20) NOT NULL,
     Id INT PRIMARY KEY IDENTITY(1, 1),
-    OrderType VARCHAR(10) NOT NULL CHECK (OrderType IN ('Buy', 'Sell'))
-    OrderableType VARCHAR(10) NOT NULL CHECK (OrderableType IN ('Stock', 'Option', 'Bond')),
+    OrderType VARCHAR(10) NOT NULL CHECK (OrderType IN ('Buy', 'Sell')),
+    OrderableType VARCHAR(10) NOT NULL CHECK (OrderableType IN ('Stock', 'Option', 'Bond'))
 );
 
--- Stocks
 CREATE TABLE Stocks (
     Id INT PRIMARY KEY IDENTITY(1, 1),
     Name NVARCHAR(30),
@@ -40,39 +39,74 @@ CREATE TABLE Stocks (
     Symbol NVARCHAR(20)
 );
 
--- Seed Stocks Data
 INSERT INTO Stocks (Name, Price, Quantity, Symbol)
 VALUES
-    ('ABC Company', 150.00, 100, 'ABC'),
-    ('XYZ Corporation', 75.50, 50, 'XYZ'),
-    ('DEF Inc.', 120.25, 75, 'DEF');
+    ('AT&T', 15.81, 75, 'T'),
+    ('Coinbase', 64.21, 100, 'COIN'),
+    ('Bank of America', 28.5, 100, 'BAC');
 
--- Seed Orders Data
 INSERT INTO Orders (UserId, OrderableId, OrderableType, Status, Type, StopPrice, LimitPrice, Shares, Expires, OrderType)
 VALUES
     (1, 1, 'Stock', 'Filled', 'Buy', NULL, 100.00, 10, '2023-05-31 12:00:00', 'Buy'),
     (2, 2, 'Option', 'Non-filled', 'Limit', NULL, 50.00, 5, '2023-06-01 15:30:00', 'Buy'),
     (1, 3, 'Bond', 'Cancelled', 'Stop Loss', 70.00, NULL, 8, '2023-06-02 10:45:00', 'Buy');
 
--- Prices
+
 CREATE TABLE Prices (
-    StockId INT NOT NULL,
-    DailyPrice DECIMAL(18, 2),
-    HourlyPrice DECIMAL(18, 2),
-    WeeklyPrice DECIMAL(18, 2),
-    YearlyPrice DECIMAL(18, 2),
-    MonthlyPrice DECIMAL(18, 2),
-    FiveYearsPrice DECIMAL(18, 2),
-    TransactionCount INT NOT NULL,
-    FiveMinutePrice DECIMAL(18, 2),
-    Volume DECIMAL(18, 2) NOT NULL,
-    ThreeMonthsPrice DECIMAL(18, 2),
     Id INT PRIMARY KEY IDENTITY(1, 1),
-    LowPrice DECIMAL(18, 2) NOT NULL,
-    OpenPrice DECIMAL(18, 2) NOT NULL,
-    ClosePrice DECIMAL(18, 2) NOT NULL,
-    HighPrice DECIMAL(18, 2) NOT NULL,
+    StockId INT NOT NULL,
+    TransactionCount INT NOT NULL,
     DateOfAggregation DATETIME NOT NULL,
-    VolumeWeightedAverage DECIMAL(18, 2) NOT NULL
+    o DECIMAL(18, 2) NOT NULL,              -- open
+    l DECIMAL(18, 2) NOT NULL,              -- lo
+    h DECIMAL(18, 2) NOT NULL,              -- hi
+    c DECIMAL(18, 2) NOT NULL,              -- close
+    v DECIMAL(18, 2) NOT NULL,              -- volume
+    vwa DECIMAL(18, 2) NOT NULL             -- volume weighted average
 );
 
+DECLARE @count INT = 0;
+DECLARE @weekAgo DATETIME = GETDATE() - 7;
+
+DECLARE @price DECIMAL(10, 2) = 27.00;
+DECLARE @open DECIMAL(10, 2) = @price;
+DECLARE @lo DECIMAL(10, 2) = 0.0;
+DECLARE @hi DECIMAL(10, 2) = 0.0;
+DECLARE @close DECIMAL(10, 2) = 0.0;
+
+WHILE @count < 30
+BEGIN    
+    SET @price = @price -0.10 + (RAND() * (.10 - (-0.10)));
+    SET @close = @price;
+
+    SET @lo = @price -0.05 + (RAND() * (-0.1));
+    SET @hi = @price -0.05 + (RAND() * (.1));
+
+    INSERT INTO Prices (
+        StockId,
+        TransactionCount,
+        DateOfAggregation,
+        o,
+        l,
+        v,
+        h,
+        c,
+        vwa
+    )
+    VALUES (
+        1,
+        100,
+        @weekAgo,
+        @open,
+        CASE WHEN @open < @lo THEN @open ELSE @lo END,
+        1000,
+        CASE WHEN @close > @hi THEN @close ELSE @hi END,
+        @close,
+        140
+    );
+
+    SET @open = @close;
+
+    SET @count = @count + 1;
+    SET @weekAgo = DATEADD(HOUR, 1, @weekAgo);
+END;

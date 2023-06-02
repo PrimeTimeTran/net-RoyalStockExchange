@@ -1,7 +1,6 @@
 using Common.Models;
 using DataAccess.Entities;
 
-
 namespace Services.Interfaces;
 public interface IStockService
 {

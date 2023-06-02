@@ -35,12 +35,15 @@ builder.Services.ConfigureSwaggerGen(setup =>
 });
 
 builder.Services.AddScoped<IStockService, StockService>();
+builder.Services.AddScoped<IPriceService, PriceService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var mapperConfig = new MapperConfiguration(config =>
 {
     config.CreateMap<Stock, StockDTO>();
     config.CreateMap<StockDTO, Stock>();
+    config.CreateMap<Price, PriceDTO>();
+    config.CreateMap<PriceDTO, Price>();
 });
 
 // Create an instance of IMapper using the configured mapper configuration

@@ -8,7 +8,9 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<Stock, StockDTO>();  // Map Stock entity to StockDTO
-        CreateMap<StockDTO, Stock>();  // Map StockDTO to Stock entity
+        CreateMap<Stock, StockDTO>();
+        CreateMap<StockDTO, Stock>();
+        CreateMap<Price, PriceDTO>();
+        CreateMap<PriceDTO, Price>();
     }
 }
