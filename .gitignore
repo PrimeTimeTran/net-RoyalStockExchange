@@ -5,6 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 .DS_Store
 .vs
+.vscode
 .fake
 .idea
 RSE.sln.DotSettings.user

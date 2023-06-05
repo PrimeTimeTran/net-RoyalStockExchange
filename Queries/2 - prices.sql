@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS Prices;
 CREATE TABLE Prices (
     Id INT PRIMARY KEY IDENTITY(1, 1),
     PriceableId INT NOT NULL,
-    PriceableType VARCHAR(10) NOT NULL CHECK (PriceableType IN ('Stock', 'Option', 'Bond')),
+    PriceableType VARCHAR(10) NOT NULL CHECK (PriceableType IN ('stock', 'option', 'bond', 'crypto')),
 
     TransactionCount INT NOT NULL,
     DateOfAggregation DATETIME NOT NULL,
@@ -46,7 +46,7 @@ BEGIN
     )
     VALUES (
         1,
-        'Stock',
+        'stock',
         100,
         @weekAgo,
         @open,
