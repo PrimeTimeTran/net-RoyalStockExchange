@@ -1,49 +1,50 @@
 # Royal Stock Exchange(RSE)
 
+Entry point is API/Program.cs
+
 ## Dependencies
 
-- .NET Core 7
-- Docker(for SQL Server/Azure SQL Edge db)
-- Rider/Visual Studio
+- .NET 7
 - Azure Data Studio
+- Rider/Visual Studio
+- Docker(for SQL Server/Azure SQL Edge db)
 
 ## Database
 
-How to setup dev database(db).
+How to setup the SQL Server using Docker & Azure SQL Edge image.
 
-Use [Docker SQL Server](https://github.com/microsoft/mssql-docker/issues/668)
+- Run SQL Server Container
 
-Run db container
+  ```sh
+  docker run -d --name mssql-server --platform linux/arm64/v8 -e ACCEPT_EULA=Y -e SA_PASSWORD=reallyStrongPwd123 -p 1433:1433 mcr.microsoft.com/azure-sql-edge
+  ```
 
-```sh
-docker run -d --name mssql-server --platform linux/arm64/v8 -e ACCEPT_EULA=Y -e SA_PASSWORD=reallyStrongPwd123 -p 1433:1433 mcr.microsoft.com/azure-sql-edge
-```
+- SSH into db
 
-SSH into db
+  ```sh
+  sqlcmd -U sa -P reallyStrongPwd123 -S 127.0.0.1,1433 -C
+  ```
 
-```sh
-sqlcmd -U sa -P reallyStrongPwd123 -S 127.0.0.1,1433 -C
-```
+- Create db
 
-Create db
+  ```sh
+  create database RSE;
+  GO
+  ```
 
-```sh
-create database RSE;
-GO
-```
+- Use db
 
-Use db
+  ```sh
+  use RSE;
+  GO
+  ```
 
-```sh
-use RSE;
-GO
-```
+- View all db tables
 
-View all db tables
-```sh
-SELECT name FROM sys.tables;
-GO
-```
+  ```sh
+  SELECT name FROM sys.tables;
+  GO
+  ```
 
 Connection string for dev using DB GUI(Rider, Azure Data Studio, etc.)
 
@@ -57,11 +58,24 @@ Connection string for dev using DB GUI(Rider, Azure Data Studio, etc.)
 
 ## Testing
 
-(start) - (close) = (number of trading hours per day)
-9:30am-4:00pm = 6.5
+## Math
 
-(hours per trading day) x (minutes per hours) = (minutes in trading day)
-6.5 x 60 = 390
+- Expected stock price records per year.
 
-(minutes trading day) x (trading days per year) = (number of minute prices of stock per year)
-390 x 252 = 98280
+  start time - close time = number of trading hours per day
+
+        9:30am - 4:00pm = 6.5
+
+  hours per trading day x minutes per hour = minutes in trading day
+
+        6.5 x 60 = 390
+
+  minutes trading day x trading days per year = number of minute prices of stock per year
+
+        390 x 252 = 98280
+
+- Number of companies on NYSE & NASDAQ.
+
+  Nasdaq count + NYSE count = Total Stocks
+
+        3,300 + 2800 = 6100

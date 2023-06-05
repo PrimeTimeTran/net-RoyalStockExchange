@@ -30,7 +30,6 @@ namespace API.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString()); // Output the exception details
                 return StatusCode(500, "An error occurred while fetching prices.");
             }
         }
