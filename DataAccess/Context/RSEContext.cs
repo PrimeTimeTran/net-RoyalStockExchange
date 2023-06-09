@@ -7,6 +7,8 @@ namespace DataAccess.Context
     {
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Price> Prices { get; set; }
+        public DbSet<Portfolio> Portfolios { get; set; }
+
         
         public RseContext(DbContextOptions<RseContext> options) : base(options)
         {

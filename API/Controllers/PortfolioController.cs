@@ -2,21 +2,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Common.Models;
 using Services.Interfaces;
+using System;
 
 namespace API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("prices")]
-    public class PriceController : ControllerBase
+    [Route("portfolios")]
+    public class PortfolioController : ControllerBase
     {
-        private readonly ILogger<PriceController> _logger;
-        private readonly IPriceService _priceService;
+        private readonly ILogger<PortfolioController> _logger;
+        private readonly IPortfolioService _portfolioService;
 
-        public PriceController(ILogger<PriceController> logger, IPriceService priceService)
+        public PortfolioController(ILogger<PortfolioController> logger, IPortfolioService portfolioService)
         {
             _logger = logger;
-            _priceService = priceService;
+            _portfolioService = portfolioService;
         }
 
         [HttpGet]
@@ -24,12 +25,12 @@ namespace API.Controllers
         {
             try
             {
-                var prices = _priceService.GetAll();
-                return Ok(prices);
+                var portfolios = _portfolioService.GetAllPortfolios();
+                return Ok(portfolios);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while fetching prices.");
+                return StatusCode(500, "An error occurred while fetching portfolios.");
             }
         }
 
@@ -38,7 +39,7 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(_priceService.GetPriceById(id));
+                return Ok(_portfolioService.GetPortfolioById(id));
             }
             catch (KeyNotFoundException)
             {
@@ -47,26 +48,26 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] PriceDTO dto)
+        public IActionResult Create([FromBody] PortfolioDTO dto)
         {
             try
             {
-                PriceDTO price = _priceService.Add(dto);
-                return CreatedAtAction(nameof(GetById), new { id = price.Id }, price);
+                PortfolioDTO portfolio = _portfolioService.AddPortfolio(dto);
+                return CreatedAtAction(nameof(GetById), new { id = portfolio.Id }, portfolio);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while creating the price.");
+                return StatusCode(500, "An error occurred while creating the portfolio.");
             }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] PriceDTO dto)
+        public IActionResult Update(int id, [FromBody] PortfolioDTO dto)
         {
             try
             {
-                PriceDTO price = _priceService.Update(id, dto);
-                return Ok(price);
+                PortfolioDTO portfolio = _portfolioService.UpdatePortfolio(id, dto);
+                return Ok(portfolio);
             }
             catch (KeyNotFoundException)
             {
@@ -79,7 +80,7 @@ namespace API.Controllers
         {
             try
             {
-                _priceService.Delete(id);
+                _portfolioService.DeletePortfolio(id);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -89,3 +90,5 @@ namespace API.Controllers
         }
     }
 }
+
+

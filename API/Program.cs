@@ -36,7 +36,15 @@ builder.Services.ConfigureSwaggerGen(setup =>
 
 builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IPriceService, PriceService>();
+builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 var mapperConfig = new MapperConfiguration(config =>
 {
@@ -44,6 +52,8 @@ var mapperConfig = new MapperConfiguration(config =>
     config.CreateMap<StockDTO, Stock>();
     config.CreateMap<Price, PriceDTO>();
     config.CreateMap<PriceDTO, Price>();
+    config.CreateMap<Portfolio, PortfolioDTO>();
+    config.CreateMap<PortfolioDTO, Portfolio>();
 });
 
 // Create an instance of IMapper using the configured mapper configuration

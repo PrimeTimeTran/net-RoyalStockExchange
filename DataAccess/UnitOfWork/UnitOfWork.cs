@@ -10,6 +10,7 @@ public class UnitOfWork : IUnitOfWork
         private readonly IMapper _mapper;
         private IStockRepository _stockRepository;
         private IPriceRepository _priceRepository;
+        private IPortfolioRepository _portfolioRepository;
 
         public UnitOfWork(RseContext context, IMapper mapper)
         {
@@ -17,6 +18,7 @@ public class UnitOfWork : IUnitOfWork
             _context = context;
             _stockRepository = new StockRepository(_context, _mapper);
             _priceRepository = new PriceRepository(_context, _mapper);
+            _portfolioRepository = new PortfolioRepository(_context, _mapper);
         }
 
         public IStockRepository StockRepository
@@ -43,6 +45,18 @@ public class UnitOfWork : IUnitOfWork
             }
         }
 
+        public IPortfolioRepository PortfolioRepository 
+        {
+            get
+            {
+                if (_portfolioRepository == null)
+                {
+                    _portfolioRepository = new PortfolioRepository(_context, _mapper);
+                }
+                return _portfolioRepository;
+            }
+        }
+        
         public void Save()
         {
             throw new NotImplementedException();
