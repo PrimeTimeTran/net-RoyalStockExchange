@@ -236,7 +236,6 @@ SET Valuation = JSON_MODIFY(
 )
 WHERE Valuation IS NOT NULL;
 
-
 UPDATE Portfolios
 SET Valuation = JSON_MODIFY(
     Valuation,
