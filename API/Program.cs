@@ -38,12 +38,16 @@ builder.Services.AddScoped<IStockService, StockService>();
 builder.Services.AddScoped<IPriceService, PriceService>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAnyOrigin",
-        corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader());
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy  =>
+        {
+            policy.WithOrigins(
+                "http://localhost:53490/");
+        });
 });
 
 var mapperConfig = new MapperConfiguration(config =>
@@ -76,6 +80,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerUI();
 }
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
 
