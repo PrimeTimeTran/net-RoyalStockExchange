@@ -35,7 +35,7 @@ builder.Services.ConfigureSwaggerGen(setup =>
 });
 
 builder.Services.AddScoped<IStockService, StockService>();
-builder.Services.AddScoped<IPriceService, PriceService>();
+builder.Services.AddScoped<IAssetService, AssetService>();
 builder.Services.AddScoped<IPortfolioService, PortfolioService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -54,8 +54,8 @@ var mapperConfig = new MapperConfiguration(config =>
 {
     config.CreateMap<Stock, StockDTO>();
     config.CreateMap<StockDTO, Stock>();
-    config.CreateMap<Price, PriceDTO>();
-    config.CreateMap<PriceDTO, Price>();
+    config.CreateMap<Asset, AssetDTO>();
+    config.CreateMap<AssetDTO, Asset>();
     config.CreateMap<Portfolio, PortfolioDTO>();
     config.CreateMap<PortfolioDTO, Portfolio>();
 });

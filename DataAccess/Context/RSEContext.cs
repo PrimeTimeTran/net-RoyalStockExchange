@@ -6,7 +6,7 @@ namespace DataAccess.Context
     public class RseContext : DbContext
     {
         public DbSet<Stock> Stocks { get; set; }
-        public DbSet<Price> Prices { get; set; }
+        public DbSet<Asset> Assets { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
 
         

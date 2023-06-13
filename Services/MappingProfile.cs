@@ -10,7 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Stock, StockDTO>();
         CreateMap<StockDTO, Stock>();
-        CreateMap<Price, PriceDTO>();
-        CreateMap<PriceDTO, Price>();
+        CreateMap<Asset, AssetDTO>();
+        CreateMap<AssetDTO, Asset>();
     }
 }

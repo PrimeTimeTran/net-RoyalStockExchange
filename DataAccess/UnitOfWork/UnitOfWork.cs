@@ -9,7 +9,7 @@ public class UnitOfWork : IUnitOfWork
         private readonly RseContext _context;
         private readonly IMapper _mapper;
         private IStockRepository _stockRepository;
-        private IPriceRepository _priceRepository;
+        private IAssetRepository _priceRepository;
         private IPortfolioRepository _portfolioRepository;
 
         public UnitOfWork(RseContext context, IMapper mapper)
@@ -17,7 +17,7 @@ public class UnitOfWork : IUnitOfWork
             _mapper = mapper;
             _context = context;
             _stockRepository = new StockRepository(_context, _mapper);
-            _priceRepository = new PriceRepository(_context, _mapper);
+            _priceRepository = new AssetRepository(_context, _mapper);
             _portfolioRepository = new PortfolioRepository(_context, _mapper);
         }
 
@@ -33,13 +33,13 @@ public class UnitOfWork : IUnitOfWork
             }
         }
         
-        public IPriceRepository PriceRepository
+        public IAssetRepository AssetRepository
         {
             get
             {
                 if (_priceRepository == null)
                 {
-                    _priceRepository = new PriceRepository(_context, _mapper);
+                    _priceRepository = new AssetRepository(_context, _mapper);
                 }
                 return _priceRepository;
             }

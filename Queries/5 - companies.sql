@@ -10,46 +10,54 @@ IF OBJECT_ID('OrderBooks', 'U') IS NOT NULL
 
 -- Create Companies table
 CREATE TABLE Companies (
-    EC INT,                                 -- Employee count
-    F DATE,                                 -- Founded
-    HQ VARCHAR(255),                        -- Headquarters
-    CEO VARCHAR(255),                       -- 
-    EH VARCHAR(255),                        -- Earnings History
-    SYM VARCHAR(255),                       -- 
-    Name VARCHAR(255),                      --
-    Id INT PRIMARY KEY,                     --
-    Industry VARCHAR(255),                  --
-    Description NVARCHAR(MAX),              --
+    EC INT,                                     -- Employee count
+    F DATE,                                     -- Founded
+    HQ VARCHAR(255),                            -- Headquarters
+    CEO VARCHAR(255),                           -- 
+    EH VARCHAR(255),                            -- Earnings History
+    SYM VARCHAR(255),                           -- 
+    Name VARCHAR(255),                          --
+    Id INT PRIMARY KEY,                         --
+    Industry VARCHAR(255),                      --
+    Description NVARCHAR(MAX),                  --
 );
 
--- Create Assets table
 CREATE TABLE Assets (
-    O FLOAT,                                -- Open price
-    V FLOAT,                                -- Volume
-    MC FLOAT,                               -- Market cap
-    PE FLOAT,                               -- P/E Ratio
-    DY FLOAT,                               -- Dividend
-    AV FLOAT,                               -- Average Volume
-    HiDay FLOAT,                            -- Daily High
-    LoDay FLOAT,                            -- Daily Low
-    HiYear FLOAT,                           -- Yeatly High
-    LoYear FLOAT,                   
+    O DECIMAL(18, 2),                           -- Open price
+    V DECIMAL(18, 2),                           -- Volume
+    MC DECIMAL(18, 2),                          -- Market cap
+    PE DECIMAL(18, 2),                          -- P/E Ratio
+    DY DECIMAL(18, 2),                          -- Dividend
+    AV DECIMAL(18, 2),                          -- Average Volume
+    HiDay DECIMAL(18, 2),                       -- Daily High
+    LoDay DECIMAL(18, 2),                       -- Daily Low
+    HiYear DECIMAL(18, 2),                      -- Yearly High
+    LoYear DECIMAL(18, 2),                      -- Yearly Low
+    VWA DECIMAL(18, 2),                         -- Volume Weighted Average
     CompanyId INT,
     SYM VARCHAR(10),
     Id INT IDENTITY(1, 1) PRIMARY KEY,
+    Live NVARCHAR(MAX),                         -- Price history from last 3 hours
+    OneDay NVARCHAR(MAX),                       -- Price history from start of day starting 12:00am
+    AllData NVARCHAR(MAX),                      -- Price history all time
+    OneWeek NVARCHAR(MAX),                      -- Price history from minus 7 days ago til today
+    OneYear NVARCHAR(MAX),                      -- Price history from today minus 1 year to today
+    OneMonth NVARCHAR(MAX),                     -- Price history from today minus 1 month to today
+    YearToDate NVARCHAR(MAX),                   -- Price history from start of this year til today
+    ThreeMonths NVARCHAR(MAX)                   -- Price history from three months ago til today
 );
 
 -- Create OrderBooks table
 CREATE TABLE OrderBooks (
     AssetId INT,
-    Live NVARCHAR(MAX),                     -- Price history from last 3 hours
-    OneDay NVARCHAR(MAX),                   -- Price history from start of day starting 12:00am
-    AllData NVARCHAR(MAX),                  -- Price history all time
-    OneWeek NVARCHAR(MAX),                  -- Price history from minus 7 days ago til today
-    OneYear NVARCHAR(MAX),                  -- Price history from today minus 1 year to today
-    OneMonth NVARCHAR(MAX),                 -- Price history from today minus 1 month to today
-    YearToDate NVARCHAR(MAX),               -- Price history from start of this year til today
-    ThreeMonths NVARCHAR(MAX),              -- Price history from three months ago til today
+    Live NVARCHAR(MAX),                         -- Price history from last 3 hours
+    OneDay NVARCHAR(MAX),                       -- Price history from start of day starting 12:00am
+    AllData NVARCHAR(MAX),                      -- Price history all time
+    OneWeek NVARCHAR(MAX),                      -- Price history from minus 7 days ago til today
+    OneYear NVARCHAR(MAX),                      -- Price history from today minus 1 year to today
+    OneMonth NVARCHAR(MAX),                     -- Price history from today minus 1 month to today
+    YearToDate NVARCHAR(MAX),                   -- Price history from start of this year til today
+    ThreeMonths NVARCHAR(MAX),                  -- Price history from three months ago til today
     Id INT IDENTITY(1, 1) PRIMARY KEY,
 );
 
@@ -90,21 +98,181 @@ VALUES
     (33, 'NFLX', 'Netflix', 'Netflix is a global streaming entertainment service that offers a wide variety of TV shows, movies, documentaries, and more. It revolutionized the way people consume entertainment by introducing the concept of streaming media on-demand.', 'Entertainment', 1800, 'Reed Hastings', 'Los Gatos, California, United States', '1997-08-29', 'Growth'),
     (34, 'ADBE', 'Adobe', 'Adobe Inc. is a multinational software company known for its creative software products. It offers industry-leading tools for graphic design, web development, video editing, and digital document management. Adobes software is widely used by creative professionals worldwide.', 'Technology', 1300, 'Shantanu Narayen', 'San Jose, California, United States', '1982-12-01', 'Impressive');
 
--- Insert assets for each company
-INSERT INTO Assets (SYM, companyId, MC, PE, DY, AV, HiDay, HiYear, LoDay, LoYear, O, V)
+-- Insert assets for each companycompa
+INSERT INTO Assets (SYM, CompanyId, MC, PE, DY, AV, HiDay, HiYear, LoDay, LoYear, O, V, Live, OneDay, AllData, OneWeek, OneYear, OneMonth, YearToDate, ThreeMonths)
 SELECT
     c.SYM AS SYM,
-    c.Id AS companyId,
-    1000000 * c.Id AS MC,
+    c.Id AS CompanyId,
+    100.2 * c.Id AS MC,
     10.5 * c.Id AS PE,
     2.5 * c.Id AS DY,
-    50 * c.Id AS AV,
-    100 * c.Id AS HiDay,
-    200 * c.Id AS HiYear,
-    80 * c.Id AS LoDay,
-    150 * c.Id AS LoYear,
-    90 * c.Id AS O,
-    10000 * c.Id AS V
+    50.2 * c.Id AS AV,
+    100.2 * c.Id AS HiDay,
+    200.2 * c.Id AS HiYear,
+    80.2 * c.Id AS LoDay,
+    150.2 * c.Id AS LoYear,
+    90.2 * c.Id AS O,
+    10000.2 * c.Id AS V,
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "live",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": [
+            {
+                "o": 0.00,
+                "l": 0.00,
+                "h": 0.00,
+                "c": 0.00,
+                "vwa": 0.00,
+                "time": ""
+            }
+        ]
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "1d",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": [
+            {
+                "o": 0.00,
+                "l": 0.00,
+                "h": 0.00,
+                "c": 0.00,
+                "vwa": 0.00,
+                "time": ""
+            }
+        ]
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "all",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": [
+            {
+                "o": 0.00,
+                "l": 0.00,
+                "h": 0.00,
+                "c": 0.00,
+                "vwa": 0.00,
+                "time": ""
+            }
+        ]
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "1w",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": [
+            {
+                "o": 0.00,
+                "l": 0.00,
+                "h": 0.00,
+                "c": 0.00,
+                "vwa": 0.00,
+                "time": ""
+            }
+        ]
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "1y",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": [
+            {
+                "o": 0.00,
+                "l": 0.00,
+                "h": 0.00,
+                "c": 0.00,
+                "vwa": 0.00,
+                "time": ""
+            }
+        ]
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "1m",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": [
+            {
+                "o": 0.00,
+                "l": 0.00,
+                "h": 0.00,
+                "c": 0.00,
+                "vwa": 0.00,
+                "time": ""
+            }
+        ]
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "ytd",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": [
+            {
+                "o": 0.00,
+                "l": 0.00,
+                "h": 0.00,
+                "c": 0.00,
+                "vwa": 0.00,
+                "time": ""
+            }
+        ]
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "3m",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": [
+            {
+                "o": 0.00,
+                "l": 0.00,
+                "h": 0.00,
+                "c": 0.00,
+                "vwa": 0.00,
+                "time": ""
+            }
+        ]
+    }'
 FROM Companies AS c;
 
 -- Insert order books for each asset

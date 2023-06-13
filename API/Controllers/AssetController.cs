@@ -7,16 +7,16 @@ namespace API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("prices")]
-    public class PriceController : ControllerBase
+    [Route("assets")]
+    public class AssetController : ControllerBase
     {
-        private readonly ILogger<PriceController> _logger;
-        private readonly IPriceService _priceService;
+        private readonly ILogger<AssetController> _logger;
+        private readonly IAssetService _assetService;
 
-        public PriceController(ILogger<PriceController> logger, IPriceService priceService)
+        public AssetController(ILogger<AssetController> logger, IAssetService assetService)
         {
             _logger = logger;
-            _priceService = priceService;
+            _assetService = assetService;
         }
 
         [HttpGet]
@@ -24,21 +24,21 @@ namespace API.Controllers
         {
             try
             {
-                var prices = _priceService.GetAll();
-                return Ok(prices);
+                var assets = _assetService.GetAll();
+                return Ok(assets);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while fetching prices.");
+                return StatusCode(500, "An error occurred while fetching Assets.");
             }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(int id, [FromQuery] string period)
         {
             try
             {
-                return Ok(_priceService.GetPriceById(id));
+                return Ok(_assetService.GetAssetById(id));
             }
             catch (KeyNotFoundException)
             {
@@ -47,26 +47,26 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] PriceDTO dto)
+        public IActionResult Create([FromBody] AssetDTO dto)
         {
             try
             {
-                PriceDTO price = _priceService.Add(dto);
-                return CreatedAtAction(nameof(GetById), new { id = price.Id }, price);
+                AssetDTO asset = _assetService.Add(dto);
+                return CreatedAtAction(nameof(GetById), new { id = asset.Id }, asset);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "An error occurred while creating the price.");
+                return StatusCode(500, "An error occurred while creating the Asset.");
             }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] PriceDTO dto)
+        public IActionResult Update(int id, [FromBody] AssetDTO dto)
         {
             try
             {
-                PriceDTO price = _priceService.Update(id, dto);
-                return Ok(price);
+                AssetDTO asset = _assetService.Update(id, dto);
+                return Ok(asset);
             }
             catch (KeyNotFoundException)
             {
@@ -79,7 +79,7 @@ namespace API.Controllers
         {
             try
             {
-                _priceService.Delete(id);
+                _assetService.Delete(id);
                 return NoContent();
             }
             catch (KeyNotFoundException)
