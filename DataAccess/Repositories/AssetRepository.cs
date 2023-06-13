@@ -1,8 +1,11 @@
-using System.Dynamic;
 using AutoMapper;
+using System.Linq;
+using System.Linq.Dynamic.Core;
+
 using DataAccess.Context;
 using DataAccess.Entities;
 using Common.Models;
+
 
 namespace DataAccess.Repositories
 {
@@ -22,11 +25,62 @@ namespace DataAccess.Repositories
             var assets = _context.Assets;
             return assets;
         }
-
-        public Asset GetById(int id)
+        
+        public Asset GetById(int id, string period = null)
         {
-            return _context.Assets.FirstOrDefault(p => p.Id == id);
+            var assetQuery = _context.Assets.Where(p => p.Id == id);
+            if (assetQuery == null)
+            {
+                return null;
+            }
+
+            var selectedProperties = new List<string> { "O", "Mc", "Pe", "Dy", "Av", "Sym", "HiDay", "LoDay", "CompanyId", "HiYear", "LoYear" };
+            var assetProperties = new List<string> { "OneDay", "OneWeek", "OneMonth", "ThreeMonths", "OneYear", "YearToDate", "AllData" };
+
+            if (assetQuery == null)
+            {
+                return null;
+            }
+
+            var asset = new Asset();
+
+            foreach (var property in selectedProperties)
+            {
+                var propertyInfo = typeof(Asset).GetProperty(property);
+                if (propertyInfo != null)
+                {
+                    var value = propertyInfo.GetValue(assetQuery.FirstOrDefault());
+                    propertyInfo.SetValue(asset, value);
+                }
+            }
+
+            var periodPropertyMap = new Dictionary<string, string>()
+            {
+                { "live", "OneDay" },
+                { "1d", "OneDay" },
+                { "1w", "OneWeek" },
+                { "1m", "OneMonth" },
+                { "3m", "ThreeMonths" },
+                { "1y", "OneYear" },
+                { "ytd", "YearToDate" },
+                { "all", "AllData" }
+            };
+
+            if (periodPropertyMap.TryGetValue(period, out var periodProperty))
+            {
+                var periodPropertyInfo = typeof(Asset).GetProperty(periodProperty);
+                if (periodPropertyInfo != null)
+                {
+                    var periodValue = periodPropertyInfo.GetValue(assetQuery.FirstOrDefault());
+                    periodPropertyInfo.SetValue(asset, periodValue);
+                }
+            }
+
+            return asset;
+
         }
+
+
 
         public Asset Add(AssetDTO assetDto)
         {

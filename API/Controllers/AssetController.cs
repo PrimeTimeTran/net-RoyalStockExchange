@@ -38,7 +38,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(_assetService.GetAssetById(id));
+                var asset = _assetService.GetAssetById(id, period);
+                return Ok(asset);
             }
             catch (KeyNotFoundException)
             {

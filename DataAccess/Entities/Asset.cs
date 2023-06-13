@@ -1,4 +1,5 @@
 namespace DataAccess.Entities;
+
 public class Asset
 {
     public int Id { get; set; }
@@ -19,6 +20,7 @@ public class Asset
     public String? OneYear { get; set; }
     public String? AllData { get; set; }
     public String? OneMonth { get; set; }
+    public String? YearToDate { get; set; }
     public String? ThreeMonths { get; set; }
     
 }

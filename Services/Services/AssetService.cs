@@ -15,12 +15,6 @@ namespace Services.Services
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        
-        public AssetDTO GetAssetById(int id)
-        {
-            var asset = _unitOfWork.AssetRepository.GetById(id);
-            return _mapper.Map<AssetDTO>(asset);
-        }
 
         public AssetDTO Add(AssetDTO dto)
         {
@@ -44,6 +38,43 @@ namespace Services.Services
             var assets = _unitOfWork.AssetRepository.GetAll();
             var dtos = _mapper.Map<IEnumerable<AssetDTO>>(assets);
             return dtos;
+        }
+        public AssetDTO GetAssetById(int id, string period)
+        {
+            var asset = _unitOfWork.AssetRepository.GetById(id, period);
+            var assetDto = _mapper.Map<AssetDTO>(asset);
+            
+            switch (period)
+            {
+                case "live":
+                    assetDto.Live = asset.Live;
+                    break;
+                case "1d":
+                    assetDto.OneDay = asset.OneDay;
+                    break;
+                case "1w":
+                    assetDto.OneWeek = asset.OneWeek;
+                    break;
+                case "1m":
+                    assetDto.OneMonth = asset.OneMonth;
+                    break;
+                case "3m":
+                    assetDto.ThreeMonths = asset.ThreeMonths;
+                    break;
+                case "1y":
+                    assetDto.OneYear = asset.OneYear;
+                    break;
+                case "ytd":
+                    assetDto.YearToDate = asset.YearToDate;
+                    break;
+                case "all":
+                    assetDto.AllData = asset.AllData;
+                    break;
+                default:
+                    break;
+            }
+            
+            return assetDto;
         }
     }
 }

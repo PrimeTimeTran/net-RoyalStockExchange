@@ -6,7 +6,7 @@ namespace DataAccess.Repositories
 {
     public interface IAssetRepository
     {
-        Asset GetById(int id, String period);
+        Asset GetById(int id, string period = null);
         IEnumerable<Asset> GetAll();
         Asset Add(AssetDTO price);
         Asset Update(int id, AssetDTO price);
