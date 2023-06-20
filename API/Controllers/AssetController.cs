@@ -33,12 +33,12 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id, [FromQuery] string period)
+        [HttpGet("{sym}")]
+        public IActionResult GetById(string sym, [FromQuery] string period)
         {
             try
             {
-                var asset = _assetService.GetAssetById(id, period);
+                var asset = _assetService.GetAssetBySym(sym, period);
                 return Ok(asset);
             }
             catch (KeyNotFoundException)

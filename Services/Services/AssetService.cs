@@ -39,9 +39,9 @@ namespace Services.Services
             var dtos = _mapper.Map<IEnumerable<AssetDTO>>(assets);
             return dtos;
         }
-        public AssetDTO GetAssetById(int id, string period)
+        public AssetDTO GetAssetBySym(string sym, string period)
         {
-            var asset = _unitOfWork.AssetRepository.GetById(id, period);
+            var asset = _unitOfWork.AssetRepository.GetBySym(sym, period);
             var assetDto = _mapper.Map<AssetDTO>(asset);
             
             switch (period)
