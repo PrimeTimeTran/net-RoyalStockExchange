@@ -155,7 +155,7 @@ BEGIN
         SET @currentValue += @change;
         SET @previousValue = @currentValue;
 
-        SET @timeSeries += N'{"timestamp": "' + REPLACE(CONVERT(NVARCHAR(19), @startTime, 126), 'T', ' ') + N'", "value": ' + CONVERT(NVARCHAR(MAX), @currentValue) + N'},';
+        SET @timeSeries += N'{"time": "' + REPLACE(CONVERT(NVARCHAR(19), @startTime, 126), 'T', ' ') + N'", "value": ' + CONVERT(NVARCHAR(MAX), @currentValue) + N'},';
 
         SET @startTime = DATEADD(MINUTE, @intervalMinutes, @startTime);
     END
@@ -163,7 +163,7 @@ BEGIN
     SET @timeSeries = LEFT(@timeSeries, LEN(@timeSeries) - 1) + N']}';
 
     UPDATE Portfolios
-    SET Valuation = JSON_MODIFY(Valuation, '$.timeSeries', JSON_QUERY(@timeSeries))
+    SET Valuation = JSON_MODIFY(Valuation, '$.series', JSON_QUERY(@timeSeries))
     WHERE Id = @portfolioId;
 
     FETCH NEXT FROM @userCursor INTO @userId;
