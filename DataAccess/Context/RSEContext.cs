@@ -9,6 +9,9 @@ namespace DataAccess.Context
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Asset> Assets { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
+        
+        public DbSet<Company> Companies { get; set; }
+
         public RseContext(DbContextOptions<RseContext> options) : base(options)
         {
         }
