@@ -61,6 +61,12 @@ namespace DataAccess.Repositories
                     default:
                         return null;
                 }
+                
+                if (asset != null)
+                {
+                    asset.Company = _context.Companies.FirstOrDefault(c => c.Id == asset.CompanyId);
+                }
+            
 
                 return asset;
         }

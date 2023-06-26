@@ -8,4 +8,5 @@ public interface IUnitOfWork : IDisposable
     IStockRepository StockRepository { get; }
     IAssetRepository AssetRepository { get; }
     IPortfolioRepository PortfolioRepository { get; }
+    ICompanyRepository CompanyRepository { get; }
 }

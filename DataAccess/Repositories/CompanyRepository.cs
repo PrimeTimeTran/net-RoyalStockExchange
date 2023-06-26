@@ -1,7 +1,6 @@
 using AutoMapper;
 using DataAccess.Context;
 using DataAccess.Entities;
-using Common.Models;
 
 namespace DataAccess.Repositories
 {

@@ -11,6 +11,7 @@ public class UnitOfWork : IUnitOfWork
         private IStockRepository _stockRepository;
         private IAssetRepository _priceRepository;
         private IPortfolioRepository _portfolioRepository;
+        private ICompanyRepository _companyRepository;
 
         public UnitOfWork(RseContext context, IMapper mapper)
         {
@@ -19,6 +20,7 @@ public class UnitOfWork : IUnitOfWork
             _stockRepository = new StockRepository(_context, _mapper);
             _priceRepository = new AssetRepository(_context, _mapper);
             _portfolioRepository = new PortfolioRepository(_context, _mapper);
+            _companyRepository = new CompanyRepository(_context, _mapper);
         }
 
         public IStockRepository StockRepository
@@ -54,6 +56,18 @@ public class UnitOfWork : IUnitOfWork
                     _portfolioRepository = new PortfolioRepository(_context, _mapper);
                 }
                 return _portfolioRepository;
+            }
+        }
+        
+        public ICompanyRepository CompanyRepository 
+        {
+            get
+            {
+                if (_companyRepository == null)
+                {
+                    _companyRepository = new CompanyRepository(_context, _mapper);
+                }
+                return _companyRepository;
             }
         }
         

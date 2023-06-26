@@ -1,4 +1,3 @@
-using Common.Models;
 using DataAccess.Entities;
 
 namespace DataAccess.Repositories;

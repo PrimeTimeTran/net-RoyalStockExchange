@@ -22,5 +22,5 @@ public class Asset
     public String? OneMonth { get; set; }
     public String? YearToDate { get; set; }
     public String? ThreeMonths { get; set; }
-    
+    public Company Company { get; set; }
 }
