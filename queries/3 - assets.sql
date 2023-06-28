@@ -1,10 +1,13 @@
 IF
-EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateLiveSeriesForCompany]') AND type = N'P')
+EXISTS (SELECT *
+FROM sys.objects
+WHERE object_id = OBJECT_ID(N'[dbo].[UpdateLiveSeriesForCompany]') AND type = N'P')
     DROP PROCEDURE
 [dbo].[UpdateLiveSeriesForCompany];
 GO
 
-CREATE PROCEDURE UpdateLiveSeriesForCompany @companyId INT,
+CREATE PROCEDURE UpdateLiveSeriesForCompany
+    @companyId INT,
     @outputValue INT OUTPUT,
     @fieldToUpdate NVARCHAR(50),
     @price DECIMAL(10, 2),
@@ -21,13 +24,15 @@ BEGIN
 @industry = 'Technology'
 BEGIN
             DECLARE
-@randomDirection INT = ABS(CHECKSUM(NEWID())) % 2; -- Randomly choose between 0 or 1
+@randomDirection INT = ABS(CHECKSUM(NEWID())) % 2;
+            -- Randomly choose between 0 or 1
 
             IF
 @randomDirection = 0 -- Decrement price
                 SET @price = @price * 0.75; -- Decrease price by 25%
 ELSE
-                SET @price = @price * 1.25; -- Increase price by 25%
+                SET @price = @price * 1.25;
+        -- Increase price by 25%
 END
 END
     SET
@@ -41,7 +46,7 @@ END
     DECLARE
 @startTime DATETIME;
 
-IF
+    IF
 @fieldToUpdate = 'Live'
 BEGIN
         SET
@@ -105,13 +110,6 @@ BEGIN
         SET
 @startTime = DATEADD(YEAR, -1, GETDATE());
 END
-ELSE IF @fieldToUpdate = 'AllData'
-BEGIN
-        SET
-@count = DATEDIFF(WEEK, @startTime, GETDATE());
-        SET
-@interval = 10080;
-END    
     DECLARE
 @open DECIMAL(10, 2) = @price;
     DECLARE
@@ -133,7 +131,6 @@ SELECT @existingSeries = CASE
                              WHEN @fieldToUpdate = 'ThreeMonths' THEN ThreeMonths
                              WHEN @fieldToUpdate = 'YearToDate' THEN YearToDate
                              WHEN @fieldToUpdate = 'OneYear' THEN OneYear
-                             WHEN @fieldToUpdate = 'AllData' THEN AllData
     END
 FROM Assets
 WHERE Id = @companyId;
@@ -171,7 +168,7 @@ BEGIN
                 "h": ' + CAST(CASE WHEN @close > @hi THEN @close ELSE @hi END AS NVARCHAR(50)) + ',
                 "c": ' + CAST(@close AS NVARCHAR(50)) + ',
                 "vwa": ' + CAST(1000 AS NVARCHAR(50)) + ',
-                "time": "' + CONVERT(NVARCHAR(50), @startTime, 120) + '"
+                "time": "' + CONVERT(NVARCHAR(50), DATEADD(MINUTE, -DATEPART(MINUTE, @startTime) % 5, @startTime), 120) + '"
             }')
         );
 
@@ -183,25 +180,33 @@ BEGIN
         SET
 @startTime = DATEADD(MINUTE, @interval, @startTime);
 END;
-    
---  Update the meta field of each asset.
-IF @fieldToUpdate = 'OneYear'
+
+    --  Update the meta field of each asset.
+    IF
+@fieldToUpdate = 'OneYear'
 BEGIN
-    DECLARE @maxClose DECIMAL(18,2);
-    DECLARE @minClose DECIMAL(18,2);
-    DECLARE @hiDay DECIMAL(18,2);
-    DECLARE @loDay DECIMAL(18,2);
-    DECLARE @random_number DECIMAL(10, 2);
-    SET @random_number = CAST(RAND() * 100 AS DECIMAL(10, 2));
+        DECLARE
+@maxClose DECIMAL(18,2);
+        DECLARE
+@minClose DECIMAL(18,2);
+        DECLARE
+@hiDay DECIMAL(18,2);
+        DECLARE
+@loDay DECIMAL(18,2);
+        DECLARE
+@random_number DECIMAL(10, 2);
+        SET
+@random_number = CAST(RAND() * 100 AS DECIMAL(10, 2));
 
 SELECT @maxClose = MAX([value]),
        @minClose = MIN([value])
 FROM OPENJSON(@existingSeries, '$.series')
     WITH (
-    [value] DECIMAL(18,2) '$.c'
+    [value] DECIMAL (18, 2) '$.c'
     );
 
-DECLARE @meta NVARCHAR(MAX) = N'{
+DECLARE
+@meta NVARCHAR(MAX) = N'{
         "MC": "",
         "PE": "",
         "dy": "",
@@ -215,11 +220,16 @@ DECLARE @meta NVARCHAR(MAX) = N'{
         "loDay": ""
     }';
 
-    SET @meta = JSON_MODIFY(@meta, '$.hiYear', @maxClose);
-    SET @meta = JSON_MODIFY(@meta, '$.loYear', @minClose);
-    SET @meta = JSON_MODIFY(@meta, '$.hiDay', @hiDay);
-    SET @meta = JSON_MODIFY(@meta, '$.loDay', @loDay);
-    SET @meta = JSON_MODIFY(@meta, '$.dy', @random_number);
+        SET
+@meta = JSON_MODIFY(@meta, '$.hiYear', @maxClose);
+        SET
+@meta = JSON_MODIFY(@meta, '$.loYear', @minClose);
+        SET
+@meta = JSON_MODIFY(@meta, '$.hiDay', @hiDay);
+        SET
+@meta = JSON_MODIFY(@meta, '$.loDay', @loDay);
+        SET
+@meta = JSON_MODIFY(@meta, '$.dy', @random_number);
 UPDATE Assets
 SET
     [Meta] = @meta
@@ -239,6 +249,147 @@ WHERE Id = @companyId;
 
 END;
 GO
+
+CREATE TABLE Assets
+(
+    Id INT IDENTITY(1, 1) PRIMARY KEY,
+    CompanyId INT,
+    SYM VARCHAR(10),
+    [O] DECIMAL(18, 2),
+    [Meta] NVARCHAR( MAX),
+    Live NVARCHAR( MAX),
+    OneDay NVARCHAR( MAX),
+    OneWeek NVARCHAR( MAX),
+    OneMonth NVARCHAR( MAX),
+    ThreeMonths NVARCHAR( MAX),
+    YearToDate NVARCHAR(MAX),
+    OneYear NVARCHAR( MAX),
+    AllData NVARCHAR( MAX)
+    );
+
+-- Insert assets for each company
+INSERT INTO Assets
+(
+    SYM,
+    CompanyId,
+    [O],
+    [Meta],
+    Live,
+    OneDay,
+    OneWeek,
+    OneMonth,
+    ThreeMonths,
+    YearToDate,
+    OneYear,
+    AllData
+)
+
+
+SELECT c.SYM       AS SYM,
+       c.Id        AS CompanyId,
+       c.Price AS [O],
+    N'{
+        "MC": "",
+        "PE": "",
+        "DY": "",
+        "V": "",
+        "AV": "",
+        "HiDay": "",
+        "HiYear": "",
+        "LoDay": "",
+        "LoYear": "",
+        "O": ""
+       }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "live",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": []
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "1d",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": []
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "1w",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": []
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "1m",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": []
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "3m",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": []
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "1y",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": []
+    }',
+    N'{
+        "sym": "' + c.SYM + '",
+        "period": "ytd",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": []
+    }',
+    N'{
+       "sym": "' + c.SYM + '",
+        "period": "all",
+        "name": "' + c.Name + '",
+        "o": 0.00,
+        "l": 0.00,
+        "h": 0.00,
+        "c": 0.00,
+        "vwa": 0.00,
+        "series": []
+    }'
+
+FROM Companies AS c;
 
 -- So we don't have to drop and recreate the table
 -- When we want to run this script again. This will clear the columns.
@@ -440,3 +591,5 @@ END
 CLOSE companyCursor;
 DEALLOCATE
 companyCursor;
+
+
