@@ -41,43 +41,6 @@ VALUES
     (2, 2, 'stock', 'filled', 'limit', 50.00, 50.00, 5.0, '2023-06-01 15:30:00', 'buy'),
     (1, 3, 'stock', 'cancelled', 'limit', 28.0, 28.10, 8.0, '2023-06-02 10:45:00', 'buy');
 
--- CREATE TABLE Trades (
---     BuyerId INT,
---     SellerId INT,
---     UserId INT NOT NULL,
---     OrderId INT NOT NULL,
---     Timestamp DATETIME,
---     Symbol NVARCHAR(20),
---     Price DECIMAL(18, 2),
---     Quantity DECIMAL(18, 2) NOT NULL,
---     Id INT PRIMARY KEY IDENTITY(1, 1),
---     FOREIGN KEY (UserId) REFERENCES Users(Id),
---     FOREIGN KEY (OrderId) REFERENCES Orders(Id),
---     FOREIGN KEY (BuyerId) REFERENCES Users(Id),
---     FOREIGN KEY (SellerId) REFERENCES Users(Id)
--- );
--- 
--- INSERT INTO Trades (UserId, Timestamp, Symbol, Price, OrderId, BuyerId, SellerId, Quantity)
--- SELECT
---     O.UserId AS UserId,
---     GETDATE() AS Timestamp,
---     S.Symbol AS Symbol,
---     S.Price AS Price,
---     O.Id AS OrderId,
---     CASE WHEN O.Intent = 'buy' THEN O.UserId END AS BuyerId,
---     CASE WHEN O.Intent = 'sell' THEN O.UserId ELSE NULL END AS SellerId,
---     O.Quantity AS Quantity
--- FROM
---     Orders AS O
---     INNER JOIN Stocks AS S ON O.OrderableId = S.Id
--- WHERE
---     O.Status = 'filled'
---     AND O.Quantity > 0
---     AND O.Id NOT IN (SELECT OrderId FROM Trades)
---     AND (O.Intent = 'sell' OR (O.Intent = 'buy' AND O.Status <> 'cancelled'));
-
-
--- Create OrderBooks table
 CREATE TABLE OrderBooks (
                             AssetId INT,
                             Live NVARCHAR(MAX),                         -- Price history from last 3 hours
@@ -185,18 +148,3 @@ SELECT
     }' AS AllData
 FROM Assets AS a
          JOIN Companies AS c ON a.CompanyId = c.Id;
-
-SELECT TOP (10)
-     [CompanyId]
-     ,[SYM]
-     ,[Id]
-     ,[Live]
-     ,[OneDay]
-     ,[AllData]
-     ,[OneWeek]
-     ,[OneYear]
-     ,[OneMonth]
-     ,[YearToDate]
-     ,[ThreeMonths]
-FROM [RSE].[dbo].[Assets]
-

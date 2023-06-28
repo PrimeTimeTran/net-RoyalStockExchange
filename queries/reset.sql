@@ -2,12 +2,12 @@ DROP TABLE IF EXISTS OrderBooks;
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS Assets;
 DROP TABLE IF EXISTS Companies;
+DROP TABLE IF EXISTS Lists;
+DROP TABLE IF EXISTS Portfolios;
 
 DROP TABLE IF EXISTS Trades;
-DROP TABLE IF EXISTS Portfolios;
 DROP TABLE IF EXISTS Notifications;
 DROP TABLE IF EXISTS Users;
-
 
 -- Add asset histories to each company
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateLiveSeriesForCompany]') AND type = N'P')

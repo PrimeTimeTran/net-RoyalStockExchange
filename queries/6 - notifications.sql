@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS Notifications;
-
 -- Create Notifications table
 CREATE TABLE Notifications (
     UserId INT,

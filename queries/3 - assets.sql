@@ -200,9 +200,8 @@ WHERE Id = @companyId;
 END;
 GO
 
-
 -- So we don't have to drop and recreate the table
--- When we want to run this script again.
+-- When we want to run this script again. This will clear the columns.
 UPDATE Assets
 SET [Meta] = N'{
     "MC": "",

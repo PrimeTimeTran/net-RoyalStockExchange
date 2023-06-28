@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS Portfolios;
-
 CREATE TABLE Portfolios (
     UserId INT NOT NULL,
     Id INT PRIMARY KEY IDENTITY(1, 1),
