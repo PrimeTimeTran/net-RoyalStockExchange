@@ -17,12 +17,14 @@ How to setup the SQL Server using Docker & Azure SQL Edge image.
 
   ```sh
   docker run -d --name mssql-server --platform linux/arm64/v8 -e ACCEPT_EULA=Y -e SA_PASSWORD=reallyStrongPwd123 -p 1433:1433 mcr.microsoft.com/azure-sql-edge
+  docker run --platform=linux/amd64 -e ACCEPT_EULA=1 -e MSSQL_SA_PASSWORD=sTr0ng3st_p@ssw0rd! -p 1433:1433 -d mcr.microsoft.com/mssql/server:2022-latest
   ```
 
 - SSH into db
 
   ```sh
   sqlcmd -U sa -P reallyStrongPwd123 -S 127.0.0.1,1433 -C
+  sqlcmd -U sa -P sTr0ng3st_p@ssw0rd! -S 127.0.0.1,1433 -C
   ```
 
 - Create db

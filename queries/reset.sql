@@ -13,6 +13,10 @@ DROP TABLE IF EXISTS Users;
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UpdateLiveSeriesForCompany]') AND type = N'P')
     DROP PROCEDURE [dbo].[UpdateLiveSeriesForCompany];
 GO
+    
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GeneratePortfolioItems]') AND type = N'P')
+    DROP PROCEDURE [dbo].[UpdateLiveSeriesForCompany];
+GO
 
 UPDATE Assets
 SET [Meta] = N'{

@@ -3,7 +3,15 @@ CREATE TABLE Portfolios (
     Id INT PRIMARY KEY IDENTITY(1, 1),
     CreatedAt DATETIME DEFAULT GETDATE(),
     Valuation NVARCHAR(MAX) NOT NULL DEFAULT N'{}',
-    CONSTRAINT FK_Portfolio_Users FOREIGN KEY (UserId) REFERENCES Users(Id)
+    CONSTRAINT FK_Portfolio_Users FOREIGN KEY (UserId) REFERENCES Users(Id),
+    Live NVARCHAR( MAX),
+    OneDay NVARCHAR( MAX),
+    OneWeek NVARCHAR( MAX),
+    OneMonth NVARCHAR( MAX),
+    ThreeMonths NVARCHAR( MAX),
+    YTD NVARCHAR(MAX),
+    OneYear NVARCHAR( MAX),
+    AllData NVARCHAR( MAX)
 );
 
 DECLARE @userId INT;
