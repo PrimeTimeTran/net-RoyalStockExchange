@@ -50,15 +50,13 @@ Connection string for dev using DB GUI(Rider, Azure Data Studio, etc.)
 
 > Server=localhost; Database=RSE; User Id=sa; Password=reallyStrongPwd123; TrustServerCertificate=true
 
-## References
+### DB Seeding
 
-[SQL Server Commands](https://www.mssqltips.com/sqlservertip/7432/sql-cheat-sheet-sql-server-tsql-commands/)
-[Setup DB with Entity framework](https://www.youtube.com/watch?v=qkJ9keBmQWo&ab_channel=IAmTimCorey)
-[Query DB from controller](https://makingloops.com/refactoring-db-calls-out-of-controllers/)
+Checkout `./queries/*` to get an idea of how the db is seeded.
+The files are numbered in the order we think they should be run.
 
-## Testing
 
-## Math
+## Data growth calculations
 
 - Expected stock price records per year.
 
@@ -79,3 +77,12 @@ Connection string for dev using DB GUI(Rider, Azure Data Studio, etc.)
   Nasdaq count + NYSE count = Total Stocks
 
         3,300 + 2800 = 6100
+
+
+## References
+
+[SQL Server Commands](https://www.mssqltips.com/sqlservertip/7432/sql-cheat-sheet-sql-server-tsql-commands/)
+[Setup DB with Entity framework](https://www.youtube.com/watch?v=qkJ9keBmQWo&ab_channel=IAmTimCorey)
+[Query DB from controller](https://makingloops.com/refactoring-db-calls-out-of-controllers/)
+[JSON.parse Online](https://codebeautify.org/string-to-json-online)
+[JSON Formatter](https://jsonformatter.org/)

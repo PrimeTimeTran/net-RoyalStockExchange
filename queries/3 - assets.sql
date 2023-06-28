@@ -111,9 +111,7 @@ BEGIN
 @count = DATEDIFF(WEEK, @startTime, GETDATE());
         SET
 @interval = 10080;
-END
-
-    
+END    
     DECLARE
 @open DECIMAL(10, 2) = @price;
     DECLARE
@@ -185,7 +183,48 @@ BEGIN
         SET
 @startTime = DATEADD(MINUTE, @interval, @startTime);
 END;
+    
+--  Update the meta field of each asset.
+IF @fieldToUpdate = 'OneYear'
+BEGIN
+    DECLARE @maxClose DECIMAL(18,2);
+    DECLARE @minClose DECIMAL(18,2);
+    DECLARE @hiDay DECIMAL(18,2);
+    DECLARE @loDay DECIMAL(18,2);
+    DECLARE @random_number DECIMAL(10, 2);
+    SET @random_number = CAST(RAND() * 100 AS DECIMAL(10, 2));
 
+SELECT @maxClose = MAX([value]),
+       @minClose = MIN([value])
+FROM OPENJSON(@existingSeries, '$.series')
+    WITH (
+    [value] DECIMAL(18,2) '$.c'
+    );
+
+DECLARE @meta NVARCHAR(MAX) = N'{
+        "MC": "",
+        "PE": "",
+        "dy": "",
+        "O": "",
+        "V": "",
+        "AV": "",
+        "VWA": "",
+        "hiYear": "",
+        "loYear": "",
+        "hiDay": "",
+        "loDay": ""
+    }';
+
+    SET @meta = JSON_MODIFY(@meta, '$.hiYear', @maxClose);
+    SET @meta = JSON_MODIFY(@meta, '$.loYear', @minClose);
+    SET @meta = JSON_MODIFY(@meta, '$.hiDay', @hiDay);
+    SET @meta = JSON_MODIFY(@meta, '$.loDay', @loDay);
+    SET @meta = JSON_MODIFY(@meta, '$.dy', @random_number);
+UPDATE Assets
+SET
+    [Meta] = @meta
+WHERE Id = @companyId;
+END
     -- Update the specified field for the specified companyId
 UPDATE Assets
 SET Live        = CASE WHEN @fieldToUpdate = 'Live' THEN @existingSeries ELSE Live END,
@@ -197,6 +236,7 @@ SET Live        = CASE WHEN @fieldToUpdate = 'Live' THEN @existingSeries ELSE Li
     OneYear     = CASE WHEN @fieldToUpdate = 'OneYear' THEN @existingSeries ELSE OneYear END,
     AllData     = CASE WHEN @fieldToUpdate = 'AllData' THEN @existingSeries ELSE AllData END
 WHERE Id = @companyId;
+
 END;
 GO
 
