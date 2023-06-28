@@ -31,5 +31,5 @@ public class Company
     public string Industry { get; set; }
 
     [Column(TypeName = "nvarchar(MAX)")]
-    public string Description { get; set; }
+    public string Desc { get; set; }
 }

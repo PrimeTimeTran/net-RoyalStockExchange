@@ -22,10 +22,10 @@ namespace DataAccess.Repositories
             return assets;
         }
 
-        public Asset GetBySym(string sym, string period = null)
+        public Asset GetBySym(string sym, string period)
         {
                 var assetQuery = _context.Assets.Where(p => p.Sym == sym);
-                if (assetQuery == null)
+                if (assetQuery == null || period == "")
                 {
                     return null;
                 }
@@ -35,28 +35,28 @@ namespace DataAccess.Repositories
                 switch (period)
                 {
                     case "live":
-                        asset = assetQuery.Select(a => new Asset { Live = a.Live, O = a.O, Mc = a.Mc, Pe = a.Pe, Dy = a.Dy, Av = a.Av, Sym = a.Sym, HiDay = a.HiDay, LoDay = a.LoDay, CompanyId = a.CompanyId, HiYear = a.HiYear, LoYear = a.LoYear }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { Live = a.Live, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "1d":
-                        asset = assetQuery.Select(a => new Asset { OneDay = a.OneDay, O = a.O, Mc = a.Mc, Pe = a.Pe, Dy = a.Dy, Av = a.Av, Sym = a.Sym, HiDay = a.HiDay, LoDay = a.LoDay, CompanyId = a.CompanyId, HiYear = a.HiYear, LoYear = a.LoYear }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { OneDay = a.OneDay, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "1w":
-                        asset = assetQuery.Select(a => new Asset { OneWeek = a.OneWeek, O = a.O, Mc = a.Mc, Pe = a.Pe, Dy = a.Dy, Av = a.Av, Sym = a.Sym, HiDay = a.HiDay, LoDay = a.LoDay, CompanyId = a.CompanyId, HiYear = a.HiYear, LoYear = a.LoYear }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { OneWeek = a.OneWeek, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "1m":
-                        asset = assetQuery.Select(a => new Asset { OneMonth = a.OneMonth, O = a.O, Mc = a.Mc, Pe = a.Pe, Dy = a.Dy, Av = a.Av, Sym = a.Sym, HiDay = a.HiDay, LoDay = a.LoDay, CompanyId = a.CompanyId, HiYear = a.HiYear, LoYear = a.LoYear }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { OneMonth = a.OneMonth, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "3m":
-                        asset = assetQuery.Select(a => new Asset { ThreeMonths = a.ThreeMonths, O = a.O, Mc = a.Mc, Pe = a.Pe, Dy = a.Dy, Av = a.Av, Sym = a.Sym, HiDay = a.HiDay, LoDay = a.LoDay, CompanyId = a.CompanyId, HiYear = a.HiYear, LoYear = a.LoYear }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { ThreeMonths = a.ThreeMonths, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "1y":
-                        asset = assetQuery.Select(a => new Asset { OneYear = a.OneYear, O = a.O, Mc = a.Mc, Pe = a.Pe, Dy = a.Dy, Av = a.Av, Sym = a.Sym, HiDay = a.HiDay, LoDay = a.LoDay, CompanyId = a.CompanyId, HiYear = a.HiYear, LoYear = a.LoYear }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { OneYear = a.OneYear, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "ytd":
-                        asset = assetQuery.Select(a => new Asset { YearToDate = a.YearToDate, O = a.O, Mc = a.Mc, Pe = a.Pe, Dy = a.Dy, Av = a.Av, Sym = a.Sym, HiDay = a.HiDay, LoDay = a.LoDay, CompanyId = a.CompanyId, HiYear = a.HiYear, LoYear = a.LoYear }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { YearToDate = a.YearToDate, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "all":
-                        asset = assetQuery.Select(a => new Asset { AllData = a.AllData, O = a.O, Mc = a.Mc, Pe = a.Pe, Dy = a.Dy, Av = a.Av, Sym = a.Sym, HiDay = a.HiDay, LoDay = a.LoDay, CompanyId = a.CompanyId, HiYear = a.HiYear, LoYear = a.LoYear }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { AllData = a.AllData, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     default:
                         return null;
