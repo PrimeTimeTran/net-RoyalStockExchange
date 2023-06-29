@@ -15,7 +15,11 @@ IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Update
 GO
     
 IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GeneratePortfolioItems]') AND type = N'P')
-    DROP PROCEDURE [dbo].[UpdateLiveSeriesForCompany];
+    DROP PROCEDURE [dbo].[GeneratePortfolioItems];
+GO
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GenerateTimePeriod]') AND type = N'P')
+    DROP PROCEDURE [dbo].[GenerateTimePeriod];
 GO
 
 UPDATE Assets
