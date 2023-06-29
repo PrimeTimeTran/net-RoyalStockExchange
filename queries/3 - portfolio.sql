@@ -232,7 +232,7 @@ SET Valuation = JSON_MODIFY(
                                                WITH (
                             symbol NVARCHAR(50),
                         quantity DECIMAL(18, 2),
-                        price DECIMAL(18, 2) )
+                        price DECIMAL(18, 2))
             ), ',',
             '"percentOfPort": ', (
                 SELECT CAST(ROUND(SUM(quantity * price) / JSON_VALUE(Valuation, '$.current.totalValue') * 100, 2) AS DECIMAL(18, 2))

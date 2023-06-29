@@ -5,7 +5,7 @@ namespace Services.Interfaces
 {
     public interface IPortfolioService 
     {
-        PortfolioDTO GetPortfolioById(int id);
+        PortfolioDTO GetPortfolioById(int id, String period);
         PortfolioDTO AddPortfolio(PortfolioDTO portfolioDto);
         PortfolioDTO UpdatePortfolio(int id, PortfolioDTO portfolioDto);
         void DeletePortfolio(int id);

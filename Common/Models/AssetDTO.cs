@@ -15,29 +15,6 @@ namespace Common.Models
         public string? YearToDate { get; set; }
         public string? ThreeMonths { get; set; }
         public string? Meta { get; set; }
-
         public CompanyDTO? Company { get; set; }
-
-        public AssetDTO()
-        {
-        }
-
-        public AssetDTO(int? id, string? sym, String? live, String? oneDay, String? oneWeek, String? meta,
-            String? oneMonth, String? threeMonths, String? oneYear, String? yearToDate, String? allData, CompanyDTO? company
-        )
-        {
-            Id = id;
-            Sym = sym;
-            Meta = meta;
-            Live = live;
-            OneDay = oneDay;
-            OneWeek = oneWeek;
-            OneMonth = oneMonth;
-            ThreeMonths = threeMonths;
-            YearToDate = yearToDate;
-            OneYear = oneYear;
-            AllData = allData;
-            Company = company;
-        }
     }
 }

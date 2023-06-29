@@ -7,7 +7,7 @@ namespace DataAccess.Repositories
     public interface IPortfolioRepository
     {
         IEnumerable<Portfolio> GetAll();
-        Portfolio GetPortfolioById(int id);
+        Portfolio GetPortfolioById(int id, String period);
         Portfolio Add(PortfolioDTO portfolioDTO);
         Portfolio Update(int id, PortfolioDTO portfolioDTO);
         void Delete(int id);

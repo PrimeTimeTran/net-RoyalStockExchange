@@ -35,11 +35,11 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(int id, String period)
         {
             try
             {
-                return Ok(_portfolioService.GetPortfolioById(id));
+                return Ok(_portfolioService.GetPortfolioById(id, period));
             }
             catch (KeyNotFoundException)
             {

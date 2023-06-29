@@ -16,9 +16,9 @@ namespace Services.Services
             _unitOfWork = unitOfWork;
         }
         
-        public PortfolioDTO GetPortfolioById(int id)
+        public PortfolioDTO GetPortfolioById(int id, String period)
         {
-            var portfolio = _unitOfWork.PortfolioRepository.GetPortfolioById(id);
+            var portfolio = _unitOfWork.PortfolioRepository.GetPortfolioById(id, period);
             return _mapper.Map<PortfolioDTO>(portfolio);
         }
 
