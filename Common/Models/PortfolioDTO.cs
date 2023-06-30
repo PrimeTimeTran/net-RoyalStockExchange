@@ -12,6 +12,7 @@ namespace Common.Models
         public string ThreeMonths { get; set; }
         public string YTD { get; set; }
         public string OneYear { get; set; }
+        public string All { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

@@ -25,11 +25,11 @@ BEGIN
 
     -- Set time increment and price fluctuation based on the column name
     IF @columnName IN ('Live', 'OneDay')
-        SET @timeIncrement = 5; -- 5 minutes
+        SET @timeIncrement = 5;
     ELSE IF @columnName IN ('OneWeek', 'OneMonth')
-        SET @timeIncrement = 60; -- 1 hour
+        SET @timeIncrement = 1;
     ELSE
-        SET @timeIncrement = 1440; -- 1 day
+        SET @timeIncrement = 1440;
 
     -- Loop to generate time series data
     WHILE @startTime <= @endTime
@@ -37,25 +37,16 @@ BEGIN
         SET @priceFluctuation = @previousPrice * (RAND() * 0.015 - 0.005);
         SET @previousPrice = ROUND(@previousPrice + @priceFluctuation, 2);
 
-        IF @columnName IN ('Live', 'OneDay')
-        BEGIN
-            INSERT INTO @timeSeries ([time], [value])
-            VALUES (DATEADD(MINUTE, @timeIncrement, @startTime), @previousPrice);
-            SET @startTime = DATEADD(MINUTE, @timeIncrement, @startTime);
-        END
-        ELSE IF @columnName IN ('OneWeek', 'OneMonth')
-        BEGIN
-            INSERT INTO @timeSeries ([time], [value])
-            VALUES (DATEADD(HOUR, @timeIncrement, @startTime), @previousPrice);
-            SET @startTime = DATEADD(HOUR, @timeIncrement, @startTime);
-        END
-        ELSE IF @columnName IN ('ThreeMonths', 'YTD', 'OneYear', 'AllData')
-        BEGIN
-            INSERT INTO @timeSeries ([time], [value])
-            VALUES (DATEADD(DAY, @timeIncrement, @startTime), @previousPrice);
+        INSERT INTO @timeSeries ([time], [value])
+        VALUES (@startTime, @previousPrice);
 
-            SET @startTime = DATEADD(DAY, @timeIncrement, @startTime);
-        END
+        -- Increment the time based on the column name
+        IF @columnName IN ('Live', 'OneDay')
+            SET @startTime = DATEADD(MINUTE, @timeIncrement, @startTime);
+        ELSE IF @columnName IN ('OneWeek', 'OneMonth')
+            SET @startTime = DATEADD(HOUR, 1, @startTime);
+        ELSE
+            SET @startTime = DATEADD(DAY, 1, @startTime);
 
         SET @i += 1;
     END;

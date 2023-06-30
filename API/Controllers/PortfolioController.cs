@@ -39,7 +39,8 @@ namespace API.Controllers
         {
             try
             {
-                return Ok(_portfolioService.GetPortfolioById(id, period));
+                var items = _portfolioService.GetPortfolioById(id, period);
+                return Ok(items);
             }
             catch (KeyNotFoundException)
             {

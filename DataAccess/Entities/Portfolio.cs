@@ -11,6 +11,7 @@ public class Portfolio
     public string OneMonth { get; set; }
     public string ThreeMonths { get; set; }
     public string YTD { get; set; }
+    public string AllData { get; set; }
     public string OneYear{ get; set; }
     public DateTime CreatedAt { get; set; }
 }

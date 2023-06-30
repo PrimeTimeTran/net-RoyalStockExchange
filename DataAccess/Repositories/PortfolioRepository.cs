@@ -51,6 +51,9 @@ namespace DataAccess.Repositories
                 case "1y":
                     portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, OneYear = p.OneYear }).FirstOrDefault();
                     break;
+                case "all":
+                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, AllData = p.AllData }).FirstOrDefault();
+                    break;
                 default:
                     return null;
             }
