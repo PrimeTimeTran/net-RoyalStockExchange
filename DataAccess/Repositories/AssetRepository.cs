@@ -53,7 +53,7 @@ namespace DataAccess.Repositories
                         asset = assetQuery.Select(a => new Asset { OneYear = a.OneYear, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "ytd":
-                        asset = assetQuery.Select(a => new Asset { YearToDate = a.YearToDate, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
+                        asset = assetQuery.Select(a => new Asset { Ytd = a.Ytd, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();
                         break;
                     case "all":
                         asset = assetQuery.Select(a => new Asset { AllData = a.AllData, Sym = a.Sym, CompanyId = a.CompanyId, Meta = a.Meta }).FirstOrDefault();

@@ -10,7 +10,7 @@ namespace Common.Models
         public string OneWeek { get; set; }
         public string OneMonth { get; set; }
         public string ThreeMonths { get; set; }
-        public string YTD { get; set; }
+        public string Ytd { get; set; }
         public string OneYear { get; set; }
         public string All { get; set; }
         public DateTime CreatedAt { get; set; }

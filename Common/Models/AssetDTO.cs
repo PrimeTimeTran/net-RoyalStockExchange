@@ -12,7 +12,7 @@ namespace Common.Models
         public string? OneYear { get; set; }
         public string? AllData { get; set; }
         public string? OneMonth { get; set; }
-        public string? YearToDate { get; set; }
+        public string? Ytd { get; set; }
         public string? ThreeMonths { get; set; }
         public string? Meta { get; set; }
         public CompanyDTO? Company { get; set; }

@@ -1,13 +1,11 @@
 IF
-EXISTS (SELECT *
-FROM sys.objects
-WHERE object_id = OBJECT_ID(N'[dbo].[UpdateLiveSeriesForCompany]') AND type = N'P')
+EXISTS (SELECT * FROM sys.objects
+    WHERE object_id = OBJECT_ID(N'[dbo].[UpdateLiveSeriesForCompany]') AND type = N'P')
     DROP PROCEDURE
 [dbo].[UpdateLiveSeriesForCompany];
 GO
 
-CREATE PROCEDURE UpdateLiveSeriesForCompany
-    @companyId INT,
+CREATE PROCEDURE UpdateLiveSeriesForCompany @companyId INT,
     @outputValue INT OUTPUT,
     @fieldToUpdate NVARCHAR(50),
     @price DECIMAL(10, 2),
@@ -23,16 +21,16 @@ BEGIN
         IF
 @industry = 'Technology'
 BEGIN
-            DECLARE
+    DECLARE
 @randomDirection INT = ABS(CHECKSUM(NEWID())) % 2;
-            -- Randomly choose between 0 or 1
+    -- Randomly choose between 0 or 1
 
-            IF
+    IF
 @randomDirection = 0 -- Decrement price
-                SET @price = @price * 0.75; -- Decrease price by 25%
+    SET @price = @price * 0.75; -- Decrease price by 25%
 ELSE
-                SET @price = @price * 1.25;
-        -- Increase price by 25%
+    SET @price = @price * 1.25;
+    -- Increase price by 25%
 END
 END
     SET
@@ -92,7 +90,7 @@ BEGIN
         SET
 @startTime = DATEADD(MONTH, -3, GETDATE());
 END
-ELSE IF @fieldToUpdate = 'YearToDate'
+ELSE IF @fieldToUpdate = 'Ytd'
 BEGIN
         SET
 @count = DATEDIFF(DAY, DATEADD(YEAR, DATEDIFF(YEAR, 0, GETDATE()), 0), GETDATE());
@@ -129,13 +127,12 @@ SELECT @existingSeries = CASE
                              WHEN @fieldToUpdate = 'OneWeek' THEN OneWeek
                              WHEN @fieldToUpdate = 'OneMonth' THEN OneMonth
                              WHEN @fieldToUpdate = 'ThreeMonths' THEN ThreeMonths
-                             WHEN @fieldToUpdate = 'YearToDate' THEN YearToDate
+                             WHEN @fieldToUpdate = 'Ytd' THEN Ytd
                              WHEN @fieldToUpdate = 'OneYear' THEN OneYear
     END
 FROM Assets
 WHERE Id = @companyId;
 
--- Remove the closing square brackets
 SET
 @existingSeries = REPLACE(@existingSeries, ']}', '');
 
@@ -171,7 +168,6 @@ BEGIN
                 "time": "' + CONVERT(NVARCHAR(50), DATEADD(MINUTE, -DATEPART(MINUTE, @startTime) % 5, @startTime), 120) + '"
             }')
         );
-
         SET
 @open = @close;
 
@@ -207,18 +203,18 @@ FROM OPENJSON(@existingSeries, '$.series')
 
 DECLARE
 @meta NVARCHAR(MAX) = N'{
-        "MC": "",
-        "PE": "",
-        "dy": "",
-        "O": "",
-        "V": "",
-        "AV": "",
-        "VWA": "",
-        "hiYear": "",
-        "loYear": "",
-        "hiDay": "",
-        "loDay": ""
-    }';
+    "MC": "",
+    "PE": "",
+    "dy": "",
+    "O": "",
+    "V": "",
+    "AV": "",
+    "VWA": "",
+    "hiYear": "",
+    "loYear": "",
+    "hiDay": "",
+    "loDay": ""
+}';
 
         SET
 @meta = JSON_MODIFY(@meta, '$.hiYear', @maxClose);
@@ -242,7 +238,7 @@ SET Live        = CASE WHEN @fieldToUpdate = 'Live' THEN @existingSeries ELSE Li
     OneWeek     = CASE WHEN @fieldToUpdate = 'OneWeek' THEN @existingSeries ELSE OneWeek END,
     OneMonth    = CASE WHEN @fieldToUpdate = 'OneMonth' THEN @existingSeries ELSE OneMonth END,
     ThreeMonths = CASE WHEN @fieldToUpdate = 'ThreeMonths' THEN @existingSeries ELSE ThreeMonths END,
-    YearToDate  = CASE WHEN @fieldToUpdate = 'YearToDate' THEN @existingSeries ELSE YearToDate END,
+    Ytd  = CASE WHEN @fieldToUpdate = 'Ytd' THEN @existingSeries ELSE Ytd END,
     OneYear     = CASE WHEN @fieldToUpdate = 'OneYear' THEN @existingSeries ELSE OneYear END,
     AllData     = CASE WHEN @fieldToUpdate = 'AllData' THEN @existingSeries ELSE AllData END
 WHERE Id = @companyId;
@@ -252,41 +248,42 @@ GO
 
 CREATE TABLE Assets
 (
-    Id INT IDENTITY(1, 1) PRIMARY KEY,
+    Id        INT IDENTITY(1, 1) PRIMARY KEY,
     CompanyId INT,
-    SYM VARCHAR(10),
-    [O] DECIMAL(18, 2),
-    [Meta] NVARCHAR( MAX),
-    Live NVARCHAR( MAX),
+    SYM       VARCHAR(10), [
+    O]
+    DECIMAL
+(
+    18,
+    2
+), [Meta] NVARCHAR( MAX), Live NVARCHAR( MAX),
     OneDay NVARCHAR( MAX),
     OneWeek NVARCHAR( MAX),
     OneMonth NVARCHAR( MAX),
     ThreeMonths NVARCHAR( MAX),
-    YearToDate NVARCHAR(MAX),
+    Ytd NVARCHAR( MAX),
     OneYear NVARCHAR( MAX),
     AllData NVARCHAR( MAX)
     );
 
 -- Insert assets for each company
 INSERT INTO Assets
-(
-    SYM,
-    CompanyId,
+(SYM,
+ CompanyId,
     [O],
     [Meta],
-    Live,
-    OneDay,
-    OneWeek,
-    OneMonth,
-    ThreeMonths,
-    YearToDate,
-    OneYear,
-    AllData
-)
+ Live,
+ OneDay,
+ OneWeek,
+ OneMonth,
+ ThreeMonths,
+ Ytd,
+ OneYear,
+ AllData)
 
 
-SELECT c.SYM       AS SYM,
-       c.Id        AS CompanyId,
+SELECT c.SYM AS SYM,
+       c.Id  AS CompanyId,
        c.Price AS [O],
     N'{
         "MC": "",
@@ -479,7 +476,7 @@ SET [ThreeMonths] = N'{
 }';
 
 UPDATE Assets
-SET [YearToDate] = N'{
+SET [Ytd] = N'{
     "sym": "",
     "period": "ytd",
     "name": "",
@@ -575,7 +572,7 @@ EXEC UpdateLiveSeriesForCompany
 EXEC UpdateLiveSeriesForCompany 
     @companyId, 
     @outputValue = @result OUTPUT, 
-    @fieldToUpdate = 'YearToDate',
+    @fieldToUpdate = 'Ytd',
     @price = @price,
     @industry = @industry;
 EXEC UpdateLiveSeriesForCompany 

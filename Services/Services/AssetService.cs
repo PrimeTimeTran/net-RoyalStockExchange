@@ -65,7 +65,7 @@ namespace Services.Services
                     assetDto.OneYear = asset.OneYear;
                     break;
                 case "ytd":
-                    assetDto.YearToDate = asset.YearToDate;
+                    assetDto.Ytd = asset.Ytd;
                     break;
                 case "all":
                     assetDto.AllData = asset.AllData;
