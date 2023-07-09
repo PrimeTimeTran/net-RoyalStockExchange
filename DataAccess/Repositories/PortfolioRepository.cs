@@ -30,32 +30,30 @@ namespace DataAccess.Repositories
 
             switch (period)
             {
-                case "live":
-                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, Live = p.Live }).FirstOrDefault();
-                    break;
                 case "1d":
-                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, OneDay = p.OneDay }).FirstOrDefault();
+                    portfolio = portfolioQuery.Select(p => new Portfolio { OneDay = p.OneDay }).FirstOrDefault();
                     break;
                 case "1w":
-                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, OneWeek = p.OneWeek }).FirstOrDefault();
+                    portfolio = portfolioQuery.Select(p => new Portfolio { OneWeek = p.OneWeek }).FirstOrDefault();
                     break;
                 case "1m":
-                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, OneMonth = p.OneMonth }).FirstOrDefault();
+                    portfolio = portfolioQuery.Select(p => new Portfolio { OneMonth = p.OneMonth }).FirstOrDefault();
                     break;
                 case "3m":
-                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, ThreeMonths = p.ThreeMonths }).FirstOrDefault();
+                    portfolio = portfolioQuery.Select(p => new Portfolio { ThreeMonths = p.ThreeMonths }).FirstOrDefault();
                     break;
                 case "ytd":
-                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, YTD = p.YTD }).FirstOrDefault();
+                    portfolio = portfolioQuery.Select(p => new Portfolio { YTD = p.YTD }).FirstOrDefault();
                     break;                
                 case "1y":
-                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, OneYear = p.OneYear }).FirstOrDefault();
+                    portfolio = portfolioQuery.Select(p => new Portfolio { OneYear = p.OneYear }).FirstOrDefault();
                     break;
                 case "all":
-                    portfolio = portfolioQuery.Select(p => new Portfolio { Valuation = p.Valuation, AllData = p.AllData }).FirstOrDefault();
+                    portfolio = portfolioQuery.Select(p => new Portfolio { AllData = p.AllData }).FirstOrDefault();
                     break;
                 default:
-                    return null;
+                    portfolio = portfolioQuery.Select(p => new Portfolio { Live = p.Live, Valuation = p.Valuation }).FirstOrDefault();
+                    break;
             }
 
             return portfolio;

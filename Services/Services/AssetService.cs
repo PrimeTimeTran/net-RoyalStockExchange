@@ -47,32 +47,34 @@ namespace Services.Services
             switch (period)
             {
                 case "live":
-                    assetDto.Live = asset.Live;
+                    assetDto.Current = asset.Live;
                     break;
                 case "1d":
-                    assetDto.OneDay = asset.OneDay;
+                    assetDto.Current = asset.OneDay;
                     break;
                 case "1w":
-                    assetDto.OneWeek = asset.OneWeek;
+                    assetDto.Current = asset.OneWeek;
                     break;
                 case "1m":
-                    assetDto.OneMonth = asset.OneMonth;
+                    assetDto.Current = asset.OneMonth;
                     break;
                 case "3m":
-                    assetDto.ThreeMonths = asset.ThreeMonths;
+                    assetDto.Current = asset.ThreeMonths;
                     break;
                 case "1y":
-                    assetDto.OneYear = asset.OneYear;
+                    assetDto.Current = asset.OneYear;
                     break;
                 case "ytd":
-                    assetDto.Ytd = asset.Ytd;
+                    assetDto.Current = asset.Ytd;
                     break;
                 case "all":
-                    assetDto.AllData = asset.AllData;
+                    assetDto.Current = asset.AllData;
                     break;
                 default:
                     break;
             }
+
+            assetDto.O = 0.0;
             
             return assetDto;
         }

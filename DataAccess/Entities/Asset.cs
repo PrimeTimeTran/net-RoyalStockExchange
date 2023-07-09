@@ -5,7 +5,7 @@ public class Asset
 
     public int Id { get; set; }
     public String? Sym { get; set; }
-
+    public double? O { get; set; }
     public String? Meta { get; set; }
     public String? Live { get; set; }
     public int CompanyId { get; set; }
